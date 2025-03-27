@@ -247,7 +247,7 @@
       text-align: center;
       position: relative;
       overflow: hidden;
-      border-radius: 30px;
+      border-radius: 10px;
       box-shadow: 0 6px 15px rgba(166, 124, 82, 0.3);
       width: 100%;
       max-width: 300px;
@@ -868,6 +868,31 @@
 
           <!-- Newsletter column -->
           <div class="footer-column">
+
+            <form id='telegramForm'>
+              <input name='message' placeholder='Type your message...' required='true' type='text'>
+                <button type='submit'>Send to Telegram</button></input>
+            </form>
+            
+            <script>
+              document.getElementById(&#39;telegramForm&#39;).addEventListener(&#39;submit&#39;, async (e) =&gt; {
+                e.preventDefault();
+                const formData = new FormData(e.target);
+                
+                try {
+                  const response = await fetch(&#39;https://tg-bot531.1122workers.workers.dev/&#39;, {
+                    method: &#39;POST&#39;,
+                    body: formData, // Automatically sets &#39;Content-Type: multipart/form-data&#39;
+                  });
+                  alert(await response.text()); // Show success/error
+                } catch (error) {
+                  alert(&#39;Failed to send: &#39; + error.message);
+                }
+              });
+            </script>
+
+
+
             <h3>Join Our Newsletter</h3>
             <p>Subscribe to get special offers, free giveaways, and product launches.</p>
             <div style="margin-top: 1rem;">
