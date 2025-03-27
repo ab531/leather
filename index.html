@@ -869,27 +869,59 @@
           <!-- Newsletter column -->
           <div class="footer-column">
 
-            <form id='telegramForm'>
-              <input name='message' placeholder='Type your message...' required='true' type='text'>
-                <button type='submit'>Send to Telegram</button></input>
-            </form>
-            
-            <script>
-              document.getElementById(&#39;telegramForm&#39;).addEventListener(&#39;submit&#39;, async (e) =&gt; {
-                e.preventDefault();
-                const formData = new FormData(e.target);
-                
-                try {
-                  const response = await fetch(&#39;https://tg-bot531.1122workers.workers.dev/&#39;, {
-                    method: &#39;POST&#39;,
-                    body: formData, // Automatically sets &#39;Content-Type: multipart/form-data&#39;
-                  });
-                  alert(await response.text()); // Show success/error
-                } catch (error) {
-                  alert(&#39;Failed to send: &#39; + error.message);
-                }
-              });
-            </script>
+            <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Telegram Message Form</title>
+  <style>
+    body { font-family: Arial, sans-serif; max-width: 500px; margin: 0 auto; padding: 20px; }
+    #response { margin-top: 10px; padding: 10px; border-radius: 5px; }
+    .success { background: #d4edda; color: #155724; }
+    .error { background: #f8d7da; color: #721c24; }
+  </style>
+</head>
+<body>
+  <h1>Send a Message to Telegram</h1>
+  <form id="telegramForm">
+    <input type="text" name="message" placeholder="Type your message..." required>
+    <button type="submit">Send</button>
+  </form>
+  <div id="response"></div>
+
+  <script>
+    const form = document.getElementById('telegramForm');
+    const responseDiv = document.getElementById('response');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const formData = new FormData(e.target);
+      const message = formData.get('message');
+
+      try {
+        const response = await fetch('https://tg-bot531.1122workers.workers.dev/', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ message }),
+        });
+
+        const result = await response.json();
+        if (result.success) {
+          responseDiv.textContent = '✅ Message sent to Telegram!';
+          responseDiv.className = 'success';
+          form.reset();
+        } else {
+          throw new Error(result.error || 'Unknown error');
+        }
+      } catch (error) {
+        responseDiv.textContent = `❌ Error: ${error.message}`;
+        responseDiv.className = 'error';
+      }
+    });
+  </script>
+</body>
+</html>
 
 
 
